@@ -56,6 +56,9 @@ func (api *API) tasksAdd(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	//fmt.Printf("Task created from Json  %v\n\n", task.Parameters[0]);
+	//fmt.Printf("Task created from Json  %v\n\n", task.Parameters[1]);
+
 	id := make([]byte, 6)
 	n, err := rand.Read(id)
 	if n != len(id) || err != nil {
@@ -88,11 +91,15 @@ func (api *API) tasksAdd(w http.ResponseWriter, r *http.Request) {
 				return err
 			}
 
+			fmt.Printf("Launching Task.....\n");
+			fmt.Printf("ENV Vars %v\n", task.EnvironmentVariables);
 			return api.m.LaunchTask(offers[0], resources, &mesoslib.Task{
 				ID:      task.ID,
 				Command: strings.Split(task.Command, " "),
 				Image:   task.DockerImage,
 				Volumes: task.Volumes,
+				Parameters: task.Parameters,
+				EnvironmentVariables: task.EnvironmentVariables,
 			})
 		}
 

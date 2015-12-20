@@ -2,6 +2,7 @@ package mesoslib
 
 import (
 	"fmt"
+	"strings"
 
 	"github.com/Sirupsen/logrus"
 	"github.com/VoltFramework/volt/mesosproto"
@@ -19,6 +20,8 @@ type Task struct {
 	Command []string
 	Image   string
 	Volumes []*Volume
+	Parameters []string
+	EnvironmentVariables []string
 }
 
 func createTaskInfo(offer *mesosproto.Offer, resources []*mesosproto.Resource, task *Task) *mesosproto.TaskInfo {
@@ -71,6 +74,38 @@ func createTaskInfo(offer *mesosproto.Offer, resources []*mesosproto.Resource, t
 		taskInfo.Command.Shell = proto.Bool(false)
 	}
 
+	// No Error checking on Parameter Syntax
+	// Assuming each element in array will be 
+	// formatted "key value"
+	fmt.Printf("Parameters  %v", task.Parameters);
+	var parameters []*mesosproto.Parameter
+	for _, element := range task.Parameters {
+		params := strings.Split(element, " ");
+
+		if len(params) == 2 {
+			param_key := params[0];
+			param_value := params[1];
+			var params = &mesosproto.Parameter{ Key: &param_key, Value: &param_value}
+			parameters = append(parameters, params);
+		}
+	}
+
+	var environment_variables []* mesosproto.Environment_Variable
+	fmt.Printf("ENV  %v\n\n", task.EnvironmentVariables);
+	for _, element := range task.EnvironmentVariables {
+		env_vars := strings.Split(element, " ");
+
+		if len(env_vars) == 2 {
+			env_var_name := env_vars[0];
+			env_var_val := env_vars[1];
+			env_variable := &mesosproto.Environment_Variable { Name: &env_var_name, Value: &env_var_val }
+			environment_variables = append(environment_variables, env_variable);
+			fmt.Printf("ENV VARS   %v\n", environment_variables);
+		}
+	}
+	var environment = &mesosproto.Environment {Variables: environment_variables};
+	taskInfo.Command.Environment = environment;
+	taskInfo.Container.Docker.Parameters = parameters;
 	return &taskInfo
 }
 
