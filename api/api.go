@@ -184,6 +184,11 @@ func (api *API) tasksKill(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+func (api *API) getInfo(w http.ResponseWriter, r *http.Request) {
+	fmt.Printf("api.getInfo called\n\n");
+
+}
+
 func (api *API) metrics(w http.ResponseWriter, r *http.Request) {
 	metrics, err := api.m.Metrics()
 	if err != nil {
@@ -269,6 +274,7 @@ func ListenAndServe(m *mesoslib.MesosLib, port int) {
 			"/tasks/{id}/file/{file}": api.getFile,
 			"/tasks":                  api.tasksList,
 			"/metrics":                api.metrics,
+			"/info":                   api.getInfo,
 		},
 		"POST": {
 			"/tasks": api.tasksAdd,

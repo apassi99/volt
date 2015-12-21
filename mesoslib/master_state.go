@@ -1,6 +1,7 @@
 package mesoslib
 
 import (
+	"fmt"
 	"encoding/json"
 	"net/http"
 )
@@ -51,6 +52,7 @@ func (m *MesosLib) getMasterState() (*masterState, error) {
 	}
 
 	data := new(masterState)
+	fmt.Printf("Response getMasterState \n %v \n", data);
 
 	if err = json.NewDecoder(resp.Body).Decode(data); err != nil {
 		return nil, err

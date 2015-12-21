@@ -7,6 +7,7 @@ type Metrics struct {
 	UsedCpus  float64 `json:"used_cpus"`
 	UsedMem   float64 `json:"used_mem"`
 	UsedDisk  float64 `json:"used_disk"`
+	NumSlaves int  `json:"num_slaves"`
 }
 
 func (m *MesosLib) Metrics() (*Metrics, error) {
@@ -30,6 +31,8 @@ func (m *MesosLib) Metrics() (*Metrics, error) {
 		metrics.TotalCpus += slave.Resources.Cpus
 		metrics.TotalDisk += slave.Resources.Disk
 	}
+
+	metrics.NumSlaves = len(data.Slaves);
 
 	return &metrics, nil
 }

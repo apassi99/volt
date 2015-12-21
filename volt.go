@@ -5,6 +5,7 @@ import (
 	"os/signal"
 	"syscall"
 	"time"
+	"fmt"
 
 	"github.com/Sirupsen/logrus"
 	"github.com/VoltFramework/volt/api"
@@ -81,6 +82,9 @@ func main() {
 
 	// initialize MesosLib
 	m := mesoslib.NewMesosLib(master, log, frameworkInfo, ip, port)
+
+	fmt.Printf("Master %v\n", master);
+	fmt.Printf("FrameworkInfo %v\n", frameworkInfo);
 
 	// start the API
 	api.ListenAndServe(m, port)

@@ -35,6 +35,8 @@ func createTaskInfo(offer *mesosproto.Offer, resources []*mesosproto.Resource, t
 		Command:   &mesosproto.CommandInfo{},
 	}
 
+	fmt.Printf("SlaveId --- %v\n", offer.SlaveId);
+
 	// Set value only if provided
 	if task.Command[0] != "" {
 		taskInfo.Command.Value = &task.Command[0]
@@ -111,6 +113,8 @@ func createTaskInfo(offer *mesosproto.Offer, resources []*mesosproto.Resource, t
 
 func (m *MesosLib) LaunchTask(offer *mesosproto.Offer, resources []*mesosproto.Resource, task *Task) error {
 	m.Log.WithFields(logrus.Fields{"ID": task.ID, "command": task.Command, "offerId": offer.Id, "dockerImage": task.Image}).Info("Launching task...")
+
+	fmt.Printf("Offer --- %v\n\n", offer);
 
 	taskInfo := createTaskInfo(offer, resources, task)
 
