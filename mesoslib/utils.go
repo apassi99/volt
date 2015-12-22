@@ -28,6 +28,10 @@ func (m *MesosLib) send(msg proto.Message, path string) error {
 		return err
 	}
 
+	fmt.Printf("URL  %v\n\n", url);
+	fmt.Printf("Path %v \n", path);
+	fmt.Printf("Response from POST request %v\n\n", resp);
+
 	if resp != nil && resp.StatusCode != http.StatusAccepted {
 		return fmt.Errorf("status code %d received while posting to: %s", resp.StatusCode, url)
 	}
