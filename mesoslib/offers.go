@@ -1,6 +1,9 @@
 package mesoslib
 
-import "github.com/VoltFramework/volt/mesosproto"
+import (
+	"fmt"
+	"github.com/VoltFramework/volt/mesosproto"
+)
 
 func (m *MesosLib) RequestOffers(resources []*mesosproto.Resource) ([]*mesosproto.Offer, error) {
 	m.Log.Info("Requesting offers...")
@@ -26,6 +29,7 @@ func (m *MesosLib) RequestOffers(resources []*mesosproto.Resource) ([]*mesosprot
 		event = <-m.GetEvent(mesosproto.Event_OFFERS)
 	}
 
+	fmt.Printf("Offers  %v/n", event.Offers.Offers);
 	m.Log.Infof("Received %d offer(s).", len(event.Offers.Offers))
 	return event.Offers.Offers, nil
 }

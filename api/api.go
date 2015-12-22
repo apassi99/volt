@@ -184,9 +184,18 @@ func (api *API) tasksKill(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func (api *API) getInfo(w http.ResponseWriter, r *http.Request) {
-	fmt.Printf("api.getInfo called\n\n");
+func (api *API) getSlaveMetrics(w http.ResponseWriter, r *http.Request) {
+	fmt.Printf("api.getSlaveIDs called\n\n");
 
+	metrics, err := api.m.SlaveIDs();
+	if err != nil {
+		api.writeError(w, http.StatusInternalServerError, err.Error())
+		return
+	}
+	w.Header().Set("Content-Type", "application/json")
+	if err := json.NewEncoder(w).Encode(metrics); err != nil {
+		api.writeError(w, http.StatusInternalServerError, err.Error())
+	}
 }
 
 func (api *API) metrics(w http.ResponseWriter, r *http.Request) {
@@ -274,7 +283,7 @@ func ListenAndServe(m *mesoslib.MesosLib, port int) {
 			"/tasks/{id}/file/{file}": api.getFile,
 			"/tasks":                  api.tasksList,
 			"/metrics":                api.metrics,
-			"/info":                   api.getInfo,
+			"/slave_metrics":          api.getSlaveMetrics,
 		},
 		"POST": {
 			"/tasks": api.tasksAdd,
